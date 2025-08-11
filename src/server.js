@@ -1,11 +1,14 @@
 import express from 'express';
 import { ENV } from './config/env.js';
-import { db } from './config/db.js'; // Assuming you have an index.js to initialize your database connection
+import { db } from './config/db.js';
 import { favoritesTable } from './db/schema.js';
 import { and, eq } from 'drizzle-orm';
+import job from './config/cron.js';
 
 const app = express();
 const PORT = ENV.PORT || 8001;
+
+if (ENV.NODE_ENV !== 'production') job.start();
 
 app.use(express.json());
 
@@ -95,4 +98,3 @@ app.delete('/api/favorites/:userId/:recipeId', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-// Redebloy initialization
